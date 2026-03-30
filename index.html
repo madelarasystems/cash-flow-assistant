@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cash Flow Reality Check — Madelara</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --surface2: #F0EEE8;
+    --border: #E2DED6;
+    --accent: #1A1A2E;
+    --accent2: #0F3460;
+    --blue-in: #2563EB;
+    --blue-lt: #EFF6FF;
+    --green: #059669;
+    --green-lt: #ECFDF5;
+    --amber: #D97706;
+    --amber-lt: #FFFBEB;
+    --red: #DC2626;
+    --red-lt: #FEF2F2;
+    --text: #1C1917;
+    --text2: #57534E;
+    --text3: #A8A29E;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 3rem 1rem 4rem;
+    overflow-x: hidden;
+  }
+
+  .card {
+    background: var(--surface);
+    border-radius: 24px;
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 460px;
+    overflow: hidden;
+    box-shadow: 0 2px 40px rgba(0,0,0,0.06);
+    box-sizing: border-box;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: var(--accent);
+    padding: 2rem 2rem 1.5rem;
+  }
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    min-width: 0;
+  }
+  .brand {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: #6B7280;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #FFFFFF;
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #8899BB;
+    font-style: italic;
+  }
+
+  /* ── Currency selector ── */
+  .currency-select-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 1;
+    min-width: 0;
+    max-width: 200px;
+    margin-top: 2px;
+  }
+  .currency-select-label {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6B7280;
+    font-weight: 500;
+  }
+  .currency-select {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 5px 24px 5px 8px;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23ffffff' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    transition: border-color 0.15s;
+  }
+  .currency-select:focus { border-color: rgba(255,255,255,0.35); }
+  .currency-select option { background: #1A1A2E; color: #fff; }
+
+  /* ── Custom currency row ── */
+  .custom-currency-row {
+    display: none;
+    gap: 8px;
+    margin-top: 12px;
+    align-items: flex-end;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .custom-currency-row.show { display: flex; }
+  .custom-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+  .custom-field label {
+    font-size: 10px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #6B7280;
+    font-weight: 500;
+  }
+  .custom-field input {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 6px;
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 10px;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+  }
+  .custom-field input::placeholder { color: rgba(255,255,255,0.25); }
+  .custom-field input:focus {
+    border-color: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.12);
+  }
+
+  /* ── Body ── */
+  .body { padding: 1.75rem 2rem; }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 12px;
+  }
+
+  /* ── Input fields ── */
+  .inputs { margin-bottom: 1.75rem; }
+  .field { margin-bottom: 14px; }
+  .field-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .field label {
+    font-size: 13px;
+    color: var(--text2);
+    font-weight: 400;
+  }
+  .field-hint {
+    font-size: 11px;
+    color: var(--text3);
+    font-style: italic;
+  }
+
+  .input-wrap {
+    display: flex;
+    align-items: center;
+    background: var(--blue-lt);
+    border: 1.5px solid #BFDBFE;
+    border-radius: var(--radius-sm);
+    padding: 0 14px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .input-wrap:focus-within {
+    border-color: var(--blue-in);
+    background: #fff;
+  }
+  .input-wrap.error {
+    border-color: var(--red);
+    background: var(--red-lt);
+  }
+  .currency-sym {
+    font-size: 15px;
+    color: var(--blue-in);
+    font-weight: 500;
+    margin-right: 8px;
+    font-family: 'DM Mono', monospace;
+    flex-shrink: 0;
+    min-width: 10px;
+  }
+  .input-wrap input[type="number"] {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 15px;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    color: var(--accent);
+    width: 100%;
+    padding: 11px 0;
+  }
+  .input-wrap input::placeholder { color: #CBD5E1; font-weight: 400; }
+
+  /* ── Validation message ── */
+  .validation-msg {
+    display: none;
+    font-size: 12px;
+    color: var(--red);
+    margin-top: 10px;
+    padding: 10px 13px;
+    background: var(--red-lt);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--red);
+    font-weight: 400;
+  }
+  .validation-msg.show { display: block; }
+
+  /* ── Buttons ── */
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .btn {
+    flex: 1;
+    padding: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn:hover { background: var(--accent2); }
+  .btn:active { transform: scale(0.99); }
+  .btn-reset {
+    flex: 0 0 auto;
+    padding: 13px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    background: transparent;
+    color: var(--text2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+  }
+  .btn-reset:hover { background: var(--surface2); border-color: var(--text3); color: var(--text); }
+  .btn-reset:active { transform: scale(0.99); }
+
+  /* ── Divider ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.75rem 0;
+  }
+
+  /* ── Results ── */
+  .results { display: none; }
+  .results.show { display: block; }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  .status-badge.green { background: var(--green-lt); color: var(--green); }
+  .status-badge.amber { background: var(--amber-lt); color: var(--amber); }
+  .status-badge.red   { background: var(--red-lt);   color: var(--red); }
+  .status-badge.darkred { background: #FFF0F0; color: #991B1B; }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .metric {
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    overflow: visible;
+    position: relative;
+  }
+  .metric.full { grid-column: 1 / -1; }
+  .metric.alert-red { background: var(--red-lt); border: 1px solid #FECACA; }
+  .metric-label {
+    font-size: 11px;
+    color: var(--text3);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .metric-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .metric-value.positive { color: var(--green); }
+  .metric-value.negative { color: var(--red); }
+  .metric-value.neutral  { color: var(--text); }
+  .metric-value.stable   { color: var(--green); }
+
+  .metric-sub {
+    font-size: 11px;
+    margin-top: 4px;
+  }
+  .metric-sub.critical { color: var(--red); }
+  .metric-sub.warning  { color: var(--amber); }
+  .metric-sub.safer    { color: var(--green); }
+  .metric-sub.neutral  { color: var(--text3); }
+
+  /* ── Financial Health Score ── */
+  .score-card {
+    background: var(--surface2);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .score-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .score-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+  .score-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .score-number.score-great  { color: var(--green); }
+  .score-number.score-good   { color: #0D9488; }
+  .score-number.score-fair   { color: var(--amber); }
+  .score-number.score-poor   { color: var(--red); }
+  .score-denom {
+    font-size: 14px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+  }
+  .score-bar-track {
+    height: 6px;
+    border-radius: 99px;
+    background: var(--border);
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.6s cubic-bezier(.4,0,.2,1);
+  }
+  .score-bar-fill.score-great  { background: var(--green); }
+  .score-bar-fill.score-good   { background: #0D9488; }
+  .score-bar-fill.score-fair   { background: var(--amber); }
+  .score-bar-fill.score-poor   { background: var(--red); }
+  .score-breakdown {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .score-pill {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: var(--border);
+    color: var(--text2);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── Insight box ── */
+  .insight-box {
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    border-left: 3px solid;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+  .insight-box.green   { background: var(--green-lt); border-color: var(--green); }
+  .insight-box.amber   { background: var(--amber-lt); border-color: var(--amber); }
+  .insight-box.red     { background: var(--red-lt);   border-color: var(--red); }
+  .insight-box.darkred { background: #FFF0F0;          border-color: #991B1B; }
+
+  /* ── What's Next box ── */
+  .next-box {
+    background: var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .next-box-title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8899BB;
+    margin-bottom: 8px;
+  }
+  .next-box-text {
+    font-size: 13px;
+    color: #CBD5E1;
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+  .next-btns {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .next-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.15s;
+    letter-spacing: 0.01em;
+  }
+  .next-btn:hover { background: rgba(255,255,255,0.16); }
+
+  /* ── Tooltip ── */
+  .tooltip-wrap { position: relative; display: inline-flex; align-items: center; overflow: visible; }
+  .tooltip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--text3);
+    font-size: 9px;
+    font-weight: 600;
+    cursor: default;
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1;
+  }
+  .tooltip-icon:hover + .tooltip-text,
+  .tooltip-icon:focus + .tooltip-text { display: block; }
+  .tooltip-text {
+    display: none;
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    white-space: normal;
+    max-width: 220px;
+    word-wrap: break-word;
+    z-index: 10;
+    pointer-events: none;
+    line-height: 1.4;
+    text-align: left;
+  }
+
+  /* ── Export & Reset ── */
+  .actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+  .export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text3);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 12px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .export-btn:hover { color: var(--text); border-color: var(--text3); }
+
+  .reset-link {
+    font-size: 12px;
+    color: var(--text3);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.15s;
+  }
+  .reset-link:hover { color: var(--text2); }
+
+  /* ── Footer ── */
+  .footer {
+    padding: 14px 2rem;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text3);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <p class="brand">Madelara</p>
+        <h1 class="title">💰 Cash Flow Assistant</h1>
+        <p class="subtitle">Am I financially okay?</p>
+      </div>
+      <div class="currency-select-wrap">
+        <span class="currency-select-label">Currency</span>
+        <select class="currency-select" id="currencySelect" onchange="onCurrencyChange()"
+                aria-label="Select currency">
+          <option value="₱|PHP">₱ PHP</option>
+          <option value="$|USD">$ USD</option>
+          <option value="€|EUR">€ EUR</option>
+          <option value="£|GBP">£ GBP</option>
+          <option value="¥|JPY">¥ JPY</option>
+          <option value="custom|CUSTOM">Custom…</option>
+        </select>
+        <div class="custom-currency-row" id="customCurrencyRow">
+          <div class="custom-field">
+            <label for="customSymbol">Symbol</label>
+            <input type="text" id="customSymbol" placeholder="$" maxlength="5"
+                   oninput="applyCustomCurrency()" />
+          </div>
+          <div class="custom-field">
+            <label for="customCode">Code</label>
+            <input type="text" id="customCode" placeholder="USD" maxlength="6"
+                   oninput="applyCustomCurrency()" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+    <p class="section-label">Your Numbers</p>
+    <div class="inputs">
+      <div class="field">
+        <div class="field-header">
+          <label for="starting">Starting Cash</label>
+          <span class="field-hint">Current savings / on hand</span>
+        </div>
+        <div class="input-wrap" id="wrap-starting">
+          <span class="currency-sym" id="sym-starting">₱</span>
+          <input type="number" id="starting" placeholder="0" min="0"
+                 aria-label="Starting cash or current savings" />
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-header">
+          <label for="income">Monthly Income</label>
+          <span class="field-hint">After taxes / all sources</span>
+        </div>
+        <div class="input-wrap" id="wrap-income">
+          <span class="currency-sym" id="sym-income">₱</span>
+          <input type="number" id="income" placeholder="0" min="0"
+                 aria-label="Monthly income after taxes" />
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-header">
+          <label for="expenses">Monthly Expenses</label>
+          <span class="field-hint">Bills, debt, groceries</span>
+        </div>
+        <div class="input-wrap" id="wrap-expenses">
+          <span class="currency-sym" id="sym-expenses">₱</span>
+          <input type="number" id="expenses" placeholder="0" min="0"
+                 aria-label="Total monthly expenses" />
+        </div>
+      </div>
+
+      <div class="validation-msg" id="validationMsg" role="alert" aria-live="polite">
+        Please enter your income and/or expenses to continue.
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" onclick="calculate()" aria-label="Calculate my cash flow">
+          Check My Cash Flow →
+        </button>
+        <button class="btn-reset" onclick="resetForm()" aria-label="Reset all fields">
+          ↺ Reset
+        </button>
+      </div>
+    </div>
+
+    <div class="results" id="results" aria-live="polite">
+      <hr class="divider" />
+      <p class="section-label">Your Results</p>
+      <div id="status-badge" class="status-badge" role="status"></div>
+      <div class="metrics" id="metrics"></div>
+      <div class="insight-box" id="insight"></div>
+      <div class="score-card" id="scoreCard"></div>
+      <div class="next-box" id="nextBox"></div>
+
+      <div class="actions">
+        <button class="export-btn" onclick="exportCSV()" aria-label="Export results as CSV">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 1v8M4 6l3 3 3-3M2 10v2a1 1 0 001 1h8a1 1 0 001-1v-2"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Export CSV
+        </button>
+        <span class="reset-link" onclick="resetForm()" role="button" tabindex="0"
+              aria-label="Reset and start over">Start over</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Madelara · Simple Finance Tools</span>
+  </div>
+</div>
+
+<script>
+  /* ─────────────────────────────────────────
+     Currency state
+  ───────────────────────────────────────── */
+  const PRESETS = {
+    '₱|PHP': { sym: '₱', code: 'PHP' },
+    '$|USD':  { sym: '$',  code: 'USD' },
+    '€|EUR':  { sym: '€',  code: 'EUR' },
+    '£|GBP':  { sym: '£',  code: 'GBP' },
+    '¥|JPY':  { sym: '¥',  code: 'JPY' },
+  };
+
+  let activeSym  = '₱';
+  let activeCode = 'PHP';
+  let lastResults = null;
+
+  /* ── Restore saved state on page load ── */
+  (function restoreState() {
+    try {
+      // Restore currency
+      const savedCur = localStorage.getItem('madelara_currency');
+      if (savedCur) {
+        const { value, sym, code } = JSON.parse(savedCur);
+        const sel = document.getElementById('currencySelect');
+        if (PRESETS[value]) {
+          sel.value  = value;
+          activeSym  = PRESETS[value].sym;
+          activeCode = PRESETS[value].code;
+        } else if (value === 'custom|CUSTOM') {
+          sel.value = 'custom|CUSTOM';
+          document.getElementById('customSymbol').value = sym || '';
+          document.getElementById('customCode').value   = code || '';
+          document.getElementById('customCurrencyRow').classList.add('show');
+          activeSym  = sym  || '$';
+          activeCode = code || 'CUSTOM';
+        }
+        updateSymbolDisplays();
+      }
+
+      // Always start with empty inputs — never restore previous session numbers
+      try { localStorage.removeItem('cashflow_inputs'); } catch(e) {}
+    } catch (e) { /* ignore */ }
+  })();
+
+  function saveCurrency(value, sym, code) {
+    try { localStorage.setItem('madelara_currency', JSON.stringify({ value, sym, code })); }
+    catch (e) {}
+  }
+
+  function saveInputs(starting, income, expenses) {
+    try { localStorage.setItem('cashflow_inputs', JSON.stringify({ starting, income, expenses })); }
+    catch (e) {}
+  }
+
+  function onCurrencyChange() {
+    const value = document.getElementById('currencySelect').value;
+    const row   = document.getElementById('customCurrencyRow');
+    if (value === 'custom|CUSTOM') {
+      row.classList.add('show');
+      applyCustomCurrency();
+    } else {
+      row.classList.remove('show');
+      activeSym  = PRESETS[value].sym;
+      activeCode = PRESETS[value].code;
+      updateSymbolDisplays();
+      saveCurrency(value, activeSym, activeCode);
+    }
+  }
+
+  function applyCustomCurrency() {
+    activeSym  = document.getElementById('customSymbol').value.trim() || '$';
+    activeCode = document.getElementById('customCode').value.trim().toUpperCase() || 'CUSTOM';
+    updateSymbolDisplays();
+    saveCurrency('custom|CUSTOM', activeSym, activeCode);
+  }
+
+  function updateSymbolDisplays() {
+    ['starting', 'income', 'expenses'].forEach(id => {
+      const el = document.getElementById('sym-' + id);
+      if (el) el.textContent = activeSym;
+    });
+  }
+
+  /* ─────────────────────────────────────────
+     Formatting helpers
+  ───────────────────────────────────────── */
+  function fmt(n) {
+    return activeSym + Math.abs(Math.round(n)).toLocaleString();
+  }
+  function fmtSigned(n) {
+    return (n >= 0 ? '+' : '−') + activeSym + Math.abs(Math.round(n)).toLocaleString();
+  }
+  function tip(text) {
+    return `<span class="tooltip-wrap">
+      <span class="tooltip-icon" tabindex="0" aria-label="More info">?</span>
+      <span class="tooltip-text">${text}</span>
+    </span>`;
+  }
+
+  /* ─────────────────────────────────────────
+     Main calculation  (master formula set)
+  ───────────────────────────────────────── */
+  function calculate() {
+    const starting = parseFloat(document.getElementById('starting').value)  || 0;
+    const income   = parseFloat(document.getElementById('income').value)    || 0;
+    const expenses = parseFloat(document.getElementById('expenses').value)  || 0;
+
+    /* Validate — prevent all-zero and negative starting cash */
+    const validationMsg = document.getElementById('validationMsg');
+    const startingRaw = document.getElementById('starting').value;
+    if (startingRaw !== '' && parseFloat(startingRaw) < 0) {
+      validationMsg.textContent = 'Starting cash cannot be negative. Please enter 0 or a positive amount.';
+      validationMsg.classList.add('show');
+      document.getElementById('wrap-starting').classList.add('error');
+      document.getElementById('results').classList.remove('show');
+      return;
+    }
+    document.getElementById('wrap-starting').classList.remove('error');
+
+    if (income === 0 && expenses === 0) {
+      validationMsg.textContent = 'Please enter your income and/or expenses to continue.';
+      validationMsg.classList.add('show');
+      document.getElementById('wrap-income').classList.add('error');
+      document.getElementById('wrap-expenses').classList.add('error');
+      document.getElementById('results').classList.remove('show');
+      return;
+    }
+    validationMsg.classList.remove('show');
+    ['income', 'expenses'].forEach(id =>
+      document.getElementById('wrap-' + id).classList.remove('error')
+    );
+
+    // Save inputs to localStorage
+    saveInputs(starting, income, expenses);
+
+    /* 1. Monthly Surplus */
+    const surplus = income - expenses;
+
+    /* 2. Savings Rate */
+    let savingsRate;
+    if (income === 0) {
+      savingsRate = '—';
+    } else if (surplus < 0) {
+      savingsRate = '—'; // deficit — not a real savings rate
+    } else {
+      savingsRate = (surplus / income * 100).toFixed(1) + '%';
+    }
+
+    /* 3. Money Lasts (Runway) — CEILING, never FLOOR */
+    let runwayLabel, runwayClass, runwaySub, runwaySubClass;
+    if (surplus >= 0) {
+      runwayLabel    = '∞ months';
+      runwayClass    = 'stable';
+      runwaySub      = 'No immediate risk — maintain surplus.';
+      runwaySubClass = 'safer';
+    } else {
+      const runway = (starting > 0) ? Math.ceil(starting / Math.abs(surplus)) : 0;
+      runwayLabel   = (runway > 999) ? '999+ months'
+                    : runway + ' month' + (runway === 1 ? '' : 's');
+      if (runway === 0) {
+        runwayClass = 'negative'; runwaySub = 'No safety net — act immediately.'; runwaySubClass = 'critical';
+      } else if (runway <= 3) {
+        runwayClass = 'negative'; runwaySub = 'Critical risk — act immediately.'; runwaySubClass = 'critical';
+      } else if (runway <= 6) {
+        runwayClass = 'neutral';  runwaySub = 'Warning — adjust spending soon.';  runwaySubClass = 'warning';
+      } else {
+        runwayClass = 'neutral';  runwaySub = 'Safer — maintain discipline.';     runwaySubClass = 'safer';
+      }
+    }
+
+    /* 4. Emergency Fund Target */
+    const emergencyFund = expenses * 6;
+
+    /* 5. Safe Spending Limit (20% savings rule) */
+    const safeSpend     = income * 0.8;
+    const safeExceeded  = expenses > safeSpend;
+    const safeClass     = safeExceeded ? 'negative' : 'positive';
+    const safeAlert     = safeExceeded;
+    const safeSub       = safeExceeded ? 'Expenses exceed this limit' : "You're within limit";
+
+    /* 6. Status */
+    let colorClass, statusLabel;
+    if (income === 0 && expenses > 0) {
+      colorClass  = 'darkred';
+      statusLabel = 'No Income';
+    } else if (surplus > 0) {
+      colorClass  = 'green';
+      statusLabel = 'Sustainable';
+    } else if (surplus === 0) {
+      colorClass  = 'amber';
+      statusLabel = 'Break-even';
+    } else {
+      colorClass  = 'red';
+      statusLabel = 'At Risk';
+    }
+
+    /* 7. Insight */
+    let insight;
+    if (income === 0) {
+      insight = 'You currently have no income. Focus on securing income immediately.';
+    } else if (surplus > 0) {
+      insight = 'Your income covers your expenses. Continue building savings and emergency reserves.';
+    } else if (surplus === 0) {
+      insight = "You're breaking even. Even a small buffer will improve stability.";
+    } else {
+      insight = 'You may run out of money if nothing changes. Reduce expenses or increase income urgently.';
+    }
+
+    /* What's Next content */
+    let nextText, btn1, btn2;
+    if (income === 0) {
+      nextText = 'Secure income immediately. List all income options available to you. Your starting cash is your only safety net right now.';
+      btn1 = 'Get Cash Flow Planner →';
+      btn2 = 'Try Cash Flow Simulator →';
+    } else if (surplus < 0) {
+      nextText = 'Start tracking expenses immediately. Use the Cash Flow Planner to identify what to cut and by how much to regain control.';
+      btn1 = 'Get Cash Flow Planner →';
+      btn2 = 'Try Cash Flow Simulator →';
+    } else if (surplus === 0) {
+      nextText = 'Create a buffer. Even small savings will stabilize your finances and give you room to handle unexpected costs.';
+      btn1 = 'Get Cash Flow Planner →';
+      btn2 = 'Try Cash Flow Simulator →';
+    } else {
+      nextText = 'Build your emergency fund. Aim for ' + fmt(emergencyFund) + ' (6 months of expenses). Consider running scenarios in the Cash Flow Simulator.';
+      btn1 = 'Get Cash Flow Planner →';
+      btn2 = 'Try Cash Flow Simulator →';
+    }
+
+    /* Surplus card */
+    let surplusCardLabel, surplusCardValue, surplusCardClass;
+    if (surplus > 0) {
+      surplusCardLabel = 'Monthly extra';
+      surplusCardValue = 'You have ' + fmt(surplus) + '/mo extra';
+      surplusCardClass = 'positive';
+    } else if (surplus < 0) {
+      surplusCardLabel = 'Monthly shortfall';
+      surplusCardValue = 'You are short ' + fmt(Math.abs(surplus)) + '/mo';
+      surplusCardClass = 'negative';
+    } else {
+      surplusCardLabel = 'Monthly balance';
+      surplusCardValue = 'Exactly breaking even';
+      surplusCardClass = 'neutral';
+    }
+
+    const surplusClass = surplus > 0 ? 'positive' : surplus < 0 ? 'negative' : 'neutral';
+
+    /* ── Financial Health Score (0–100) ──
+       Component 1: Surplus %   → 0–40 pts  (surplus/income as % of income, capped)
+       Component 2: Runway      → 0–35 pts  (months of runway, capped at 12)
+       Component 3: Savings rate → 0–25 pts (% of income saved, capped at 20%)
+    */
+    let scoreTotal = 0;
+    let scoreSurplusPts = 0, scoreRunwayPts = 0, scoreSavingsPts = 0;
+
+    if (income > 0) {
+      // Surplus component: ratio of surplus to income, max 40pts at surplus >= 30% of income
+      const surplusRatio = surplus / income;
+      scoreSurplusPts = Math.round(Math.min(Math.max(surplusRatio / 0.30, 0), 1) * 40);
+
+      // Savings rate component: based on progress toward emergency fund (independent of surplus ratio)
+      // Max 25pts when starting cash >= emergency fund target (6 months of expenses)
+      if (surplus > 0 && expenses > 0) {
+        const emergencyProgress = Math.min(starting / (expenses * 6), 1);
+        scoreSavingsPts = Math.round(emergencyProgress * 25);
+      } else {
+        scoreSavingsPts = 0;
+      }
+    }
+
+    // Runway component: max 35pts at 12+ months runway
+    if (surplus >= 0 && income > 0) {
+      // Scale by starting cash vs 6-month emergency fund — don't auto-award full points
+      const efTarget = expenses * 6;
+      if (efTarget > 0) {
+        const cashRatio = Math.min(starting / efTarget, 1);
+        scoreRunwayPts = Math.round(cashRatio * 35);
+      } else {
+        scoreRunwayPts = 35; // no expenses = full runway
+      }
+    } else if (surplus < 0 && starting > 0) {
+      const runwayMonths = Math.ceil(starting / Math.abs(surplus));
+      scoreRunwayPts = Math.round(Math.min(runwayMonths / 12, 1) * 35);
+    }
+
+    // No income = emergency — cap score
+    if (income === 0) {
+      scoreTotal = Math.min(scoreRunwayPts, 10);
+    } else {
+      scoreTotal = scoreSurplusPts + scoreRunwayPts + scoreSavingsPts;
+    }
+
+    scoreTotal = Math.max(0, Math.min(100, scoreTotal));
+
+    let scoreClass, scoreLabel;
+    if      (scoreTotal >= 80) { scoreClass = 'score-great'; scoreLabel = 'Excellent'; }
+    else if (scoreTotal >= 60) { scoreClass = 'score-good';  scoreLabel = 'Good'; }
+    else if (scoreTotal >= 40) { scoreClass = 'score-fair';  scoreLabel = 'Fair'; }
+    else                       { scoreClass = 'score-poor';  scoreLabel = 'Needs Work'; }
+
+    /* Store for export */
+    lastResults = {
+      starting, income, expenses, surplus,
+      savingsRate, runwayLabel, runwaySub,
+      emergencyFund, safeSpend, safeExceeded,
+      scoreTotal, scoreLabel,
+      statusLabel, insight,
+      sym: activeSym, code: activeCode,
+    };
+
+    /* Render badge */
+    document.getElementById('status-badge').className = `status-badge ${colorClass}`;
+    document.getElementById('status-badge').textContent = statusLabel;
+
+    /* Render metrics */
+    document.getElementById('metrics').innerHTML = `
+      <div class="metric">
+        <div class="metric-label">
+          Monthly surplus ${tip('Income minus expenses each month.')}
+        </div>
+        <div class="metric-value ${surplusClass}">${fmtSigned(surplus)}</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">
+          Money lasts ${tip('Months your starting cash covers a deficit. Uses ceiling to avoid underestimating risk.')}
+        </div>
+        <div class="metric-value ${runwayClass}">${runwayLabel}</div>
+        <div class="metric-sub ${runwaySubClass}">${runwaySub}</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">
+          Savings rate ${tip('Percentage of income you keep each month. Shown as — when income is zero or expenses exceed income.')}
+        </div>
+        <div class="metric-value ${surplus > 0 && income > 0 ? 'positive' : income === 0 ? 'neutral' : 'neutral'}">${savingsRate}</div>
+      </div>
+
+      <div class="metric">
+        <div class="metric-label">
+          Emergency fund target ${tip('6 months of expenses as your safety net. Even saving 1 month is a strong start.')}
+        </div>
+        <div class="metric-value neutral">${fmt(emergencyFund)}</div>
+      </div>
+
+      <div class="metric full ${safeAlert ? 'alert-red' : ''}">
+        <div class="metric-label">
+          Safe spending limit ${tip('Maximum recommended spending if saving at least 20% of income.')}
+        </div>
+        <div class="metric-value ${safeClass}">${fmt(safeSpend)}/mo</div>
+        <div class="metric-sub ${safeExceeded ? 'critical' : 'safer'}">${safeSub}</div>
+      </div>
+
+      <div class="metric full">
+        <div class="metric-label">${surplusCardLabel}</div>
+        <div class="metric-value ${surplusCardClass}" style="font-size:14px">${surplusCardValue}</div>
+      </div>
+    `;
+
+    /* Render insight */
+    document.getElementById('insight').className = `insight-box ${colorClass}`;
+    document.getElementById('insight').textContent = insight;
+
+    /* Render Financial Health Score */
+    document.getElementById('scoreCard').innerHTML = `
+      <div class="score-card-top">
+        <div>
+          <p class="score-label">Financial Health Score</p>
+        </div>
+        <div style="text-align:right">
+          <span class="score-number ${scoreClass}">${scoreTotal}</span>
+          <span class="score-denom"> / 100</span>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">${scoreLabel}</div>
+        </div>
+      </div>
+      <div class="score-bar-track">
+        <div class="score-bar-fill ${scoreClass}" style="width:${scoreTotal}%"></div>
+      </div>
+      <div class="score-breakdown">
+        <span class="score-pill">Surplus ${scoreSurplusPts}/40</span>
+        <span class="score-pill">Runway ${scoreRunwayPts}/35</span>
+        <span class="score-pill">Savings ${scoreSavingsPts}/25</span>
+      </div>
+    `;
+
+    /* Render What's Next */
+    document.getElementById('nextBox').innerHTML = `
+      <p class="next-box-title">What should you do next?</p>
+      <p class="next-box-text">${nextText}</p>
+      <div class="next-btns">
+        <button class="next-btn" onclick="alert('Cash Flow Planner coming soon!')">${btn1}</button>
+        <button class="next-btn" onclick="alert('Cash Flow Simulator coming soon!')">${btn2}</button>
+      </div>
+    `;
+
+    /* Show results */
+    document.getElementById('results').classList.add('show');
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  /* ─────────────────────────────────────────
+     Reset — true empty state, no sample data
+  ───────────────────────────────────────── */
+  function resetForm() {
+    ['starting', 'income', 'expenses'].forEach(id => {
+      document.getElementById(id).value = '';
+      const wrap = document.getElementById('wrap-' + id);
+      if (wrap) wrap.classList.remove('error');
+    });
+    const validationMsg = document.getElementById('validationMsg');
+    validationMsg.classList.remove('show');
+    validationMsg.textContent = 'Please enter your income and/or expenses to continue.';
+    document.getElementById('results').classList.remove('show');
+    try { localStorage.removeItem('cashflow_inputs'); } catch(e) {}
+    lastResults = null;
+  }
+
+  /* ─────────────────────────────────────────
+     Export CSV
+  ───────────────────────────────────────── */
+  function exportCSV() {
+    if (!lastResults) return;
+    const r   = lastResults;
+    const sym = r.sym;
+    const fmtN = n => sym + Math.abs(Math.round(n)).toLocaleString();
+    const fmtSgn = n => (n >= 0 ? '' : '−') + sym + Math.abs(Math.round(n)).toLocaleString();
+
+    const rows = [
+      ['Metric', 'Value'],
+      ['Currency', `${sym} (${r.code})`],
+      ['Starting Cash', fmtN(r.starting)],
+      ['Monthly Income', fmtN(r.income)],
+      ['Monthly Expenses', fmtN(r.expenses)],
+      ['Monthly Surplus', fmtSgn(r.surplus)],
+      ['Savings Rate', r.savingsRate],
+      ['Money Lasts (Runway)', r.runwayLabel],
+      ['Safe Spending Limit (80% of income)', fmtN(r.safeSpend) + '/mo'],
+      ['Emergency Fund Target', fmtN(r.emergencyFund)],
+      ['Financial Health Score', `${r.scoreTotal} / 100 (${r.scoreLabel})`],
+      ['Status', r.statusLabel],
+      ['Insight', r.insight],
+      ['Generated', new Date().toLocaleDateString(undefined, { year:'numeric', month:'long', day:'numeric' })],
+    ];
+
+    const csv  = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'cash-flow-results.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  /* ─────────────────────────────────────────
+     Keyboard support
+  ───────────────────────────────────────── */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const activeId = document.activeElement && document.activeElement.id;
+      const inputFields = ['starting', 'income', 'expenses'];
+      // Only calculate if focus is on a number input or outside any input (general page)
+      if (!document.activeElement || document.activeElement.tagName !== 'INPUT' || inputFields.includes(activeId)) {
+        calculate();
+      }
+    }
+  });
+  document.querySelector('.reset-link') && document.querySelector('.reset-link').addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') resetForm();
+  });
+</script>
+</body>
+</html>
